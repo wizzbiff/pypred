@@ -85,6 +85,19 @@ class Node(object):
             buf = self.right.description(buf, depth+1, max_depth)
         return buf
 
+    def to_json(self, depth=0, max_depth=0):
+        if max_depth and depth == max_depth:
+            raise TypeError('Max depth reached')
+
+        details = self.details()
+
+        if hasattr(self, "left"):
+            details['left'] = self.left.to_json(depth+1, max_depth)
+        if hasattr(self, "right"):
+            details['right'] = self.right.to_json(depth+1, max_depth)
+
+        return details
+
     def __repr__(self):
         """
         Provides a representation that is useful to check the AST

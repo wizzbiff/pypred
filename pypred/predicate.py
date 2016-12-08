@@ -196,6 +196,12 @@ class Predicate(LiteralResolver):
             raise InvalidPredicate
         return self.ast.description(max_depth=max_depth)
 
+    def to_json(self, max_depth=0):
+        "Provides a json tree description of the predicate for processing"
+        if not self.is_valid():
+            raise InvalidPredicate
+        return self.ast.to_json(max_depth=max_depth)
+
     def evaluate(self, document):
         "Evaluates the predicate against the document."
         if not self.is_valid():
