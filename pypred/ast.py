@@ -337,6 +337,9 @@ class ContainsOperator(Node):
         self.left = left
         self.right = right
 
+    def details(self):
+        return {'Operator': 'CONTAINS'}
+
     def _validate(self, info):
         if not isinstance(self.right, (Number, Literal, Constant)):
             errs = info["errors"]
@@ -372,6 +375,9 @@ class MatchOperator(Node):
     def __init__(self, left, right):
         self.left = left
         self.right = right
+
+    def details(self):
+        return {'Operator': 'MATCH'}
 
     def _validate(self, info):
         if not isinstance(self.right, Regex):
