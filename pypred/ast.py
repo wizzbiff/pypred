@@ -64,6 +64,9 @@ class Node(object):
         cls = self.__class__.__name__
         return "%s at %s" % (cls, self.position)
 
+    def details(self):
+        return {'Node': ''}
+
     def description(self, buf=None, depth=0, max_depth=0):
         """
         Provides a human readable tree description
@@ -168,6 +171,9 @@ class LogicalOperator(Node):
     def name(self):
         return "%s operator at %s" % (self.type.upper(), self.position)
 
+    def details(self):
+        return {'Operator': self.type.upper()}
+
     def _validate(self, info):
         "Validates the node"
         if self.type not in ("and", "or"):
@@ -215,6 +221,9 @@ class NegateOperator(Node):
     def name(self):
         return "not operator at %s" % (self.position)
 
+    def details(self):
+        return {'Operator': 'NOT'}
+
     @failure_info
     def eval(self, ctx):
         return not self.left.eval(ctx)
@@ -243,6 +252,9 @@ class CompareOperator(Node):
 
     def name(self):
         return "%s comparison at %s" % (self.type.upper(), self.position)
+
+    def details(self):
+        return {'Comparison': self.type.upper()}
 
     def _validate(self, info):
         if self.type not in (">=", ">", "<", "<=", "=", "!=", "is"):
@@ -395,6 +407,9 @@ class Regex(Node):
     def name(self):
         return "Regex %s at %s" % (repr(self.value), self.position)
 
+    def details(self):
+        return {'Regex': repr(self.value)}
+
     def _validate(self, info):
         if not isinstance(self.value, str):
             errs = info["errors"]
@@ -442,6 +457,9 @@ class Literal(Node):
 
     def name(self):
         return "Literal %s at %s" % (self.value, self.position)
+
+    def details(self):
+        return {'Literal': self.value.upper()}
 
     def static_resolve(self, pred):
         "Uses the predicate to perform a static resolution"
@@ -492,6 +510,9 @@ class Number(Node):
     def name(self):
         return "Number %f at %s" % (self.value, self.position)
 
+    def details(self):
+        return {'Number': self.value}
+
     def _validate(self, info):
         if not isinstance(self.value, float):
             errs = info["errors"]
@@ -523,6 +544,9 @@ class Constant(Node):
 
     def name(self):
         return "Constant %s at %s" % (self.value, self.position)
+
+    def details(self):
+        return {'Constant': self.value}
 
     def _validate(self, info):
         if self.value not in (True, False, None):
@@ -621,6 +645,9 @@ class PushResult(Node):
     def name(self):
         return "PushResult of '%s'" % self.pred.predicate
 
+    def details(self):
+        return {'PushResult': self.pred.predicate}
+
     @failure_info
     def eval(self, ctx):
         ctx.reach += 1
@@ -649,6 +676,9 @@ class Branch(Node):
 
     def name(self):
         return "Branch on %s" % self.expr.name()
+
+    def details(self):
+        return {'Branch': self.expr.name()}
 
     def description(self, buf=None, depth=0, max_depth=0):
         """
@@ -708,6 +738,9 @@ class Both(Node):
         "Provides human name with location"
         return self.__class__.__name__
 
+    def details(self):
+        return {'Both': ''}
+
     @failure_info
     def eval(self, ctx):
         l = self.left.eval(ctx)
@@ -732,6 +765,9 @@ class CachedNode(Node):
 
     def name(self):
         return "Cache of " + self.expr.name()
+
+    def details(self):
+        return {'Cache': self.expr.name()}
 
     def description(self, buf=None, depth=0, max_depth=0):
         """
@@ -784,6 +820,9 @@ class LiteralSet(Node):
 
     def name(self):
         return "Set of %s" % repr(self.value)
+
+    def details(self):
+        return {'Set': repr(self.value)}
 
     def static_resolve(self, pred):
         "Uses the predicate to perform a static resolution"
