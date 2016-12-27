@@ -65,7 +65,7 @@ class Node(object):
         return "%s at %s" % (cls, self.position)
 
     def details(self):
-        return {'Node': ''}
+        raise NotImplementedError
 
     def description(self, buf=None, depth=0, max_depth=0):
         """
@@ -185,7 +185,7 @@ class LogicalOperator(Node):
         return "%s operator at %s" % (self.type.upper(), self.position)
 
     def details(self):
-        return {'Operator': self.type.upper()}
+        return {'LogicalOperator': self.type.upper()}
 
     def _validate(self, info):
         "Validates the node"
@@ -235,7 +235,7 @@ class NegateOperator(Node):
         return "not operator at %s" % (self.position)
 
     def details(self):
-        return {'Operator': 'NOT'}
+        return {'NegateOperator': 'NOT'}
 
     @failure_info
     def eval(self, ctx):
